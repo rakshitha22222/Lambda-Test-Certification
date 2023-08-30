@@ -1,0 +1,51 @@
+### Test scenario 3
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
+
+# Set up the WebDriver (make sure you have the appropriate driver executable in PATH)
+driver = webdriver.Chrome()
+
+# 1. Open the Selenium Playground page
+driver.get("https://www.lambdatest.com/selenium-playground")
+
+# Click "Input Form Submit" under "Input Forms"
+input_form_submit_link = driver.find_element(By.PARTIAL_LINK_TEXT, "Input Form Submit")
+input_form_submit_link.click()
+
+# Wait for the page to load
+driver.implicitly_wait(10)  # Adjust the wait time as needed
+
+# 2. Click "Submit" without filling in any information in the form
+submit_button = driver.find_element(By.XPATH, "//button[text()='Submit']")
+submit_button.click()
+
+# 3. Assert "Please fill in the fields" error message
+error_message = driver.find_element(By.XPATH, "//small[contains(text(), 'Please fill in the fields')]")
+assert error_message.is_displayed(), "Error message not displayed"
+
+# 4. Fill in Name, Email, and other fields
+name_input = driver.find_element(By.NAME, "name")
+email_input = driver.find_element(By.NAME, "email")
+phone_input = driver.find_element(By.NAME, "phone")
+
+name_input.send_keys("John Doe")
+email_input.send_keys("johndoe@example.com")
+phone_input.send_keys("1234567890")
+
+# 5. From the Country drop-down, select "United States" using the text property
+country_dropdown = Select(driver.find_element(By.NAME, "country"))
+country_dropdown.select_by_visible_text("United States")
+
+# 6. Fill all fields and click "Submit"
+message_input = driver.find_element(By.NAME, "message")
+message_input.send_keys("This is a test message")
+submit_button.click()
+
+# 7. Once submitted, validate the success message "Thanks for contacting us, we will get back to you shortly."
+success_message = driver.find_element(By.XPATH, "//div[contains(text(), 'Thanks for contacting us, we will get back to you shortly.')]")
+assert success_message.is_displayed(), "Success message validation failed"
+
+# Close the browser
+driver.quit()
