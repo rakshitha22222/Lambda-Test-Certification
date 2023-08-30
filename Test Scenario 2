@@ -1,0 +1,41 @@
+####Test scenario 2
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
+
+# Set up the WebDriver (make sure you have the appropriate driver executable in PATH)
+driver = webdriver.Chrome()
+
+# 1. Open the Selenium Playground page
+driver.get("https://www.lambdatest.com/selenium-playground")
+
+# Click "Drag & Drop Sliders" under "Progress Bars & Sliders"
+drag_and_drop_sliders_link = driver.find_element(By.PARTIAL_LINK_TEXT, "Drag & Drop Sliders")
+drag_and_drop_sliders_link.click()
+
+# Wait for the page to load
+driver.implicitly_wait(10)  # Adjust the wait time as needed
+
+# 2. Select the slider "Default value 15" and drag the bar to make it 95
+slider = driver.find_element(By.ID, "slider1")
+slider_value = driver.find_element(By.ID, "slider1-value")
+
+# Get the initial value of the slider
+initial_value = slider_value.text
+
+# Drag the slider to the desired position
+action_chains = ActionChains(driver)
+action_chains.drag_and_drop_by_offset(slider, 80, 0).perform()
+
+# Wait for the slider value to update
+driver.implicitly_wait(10)  # Adjust the wait time as needed
+
+# Get the updated value of the slider
+updated_value = slider_value.text
+
+# 3. Validate whether the range value shows 95
+assert updated_value == "95", "Slider value validation failed"
+
+# Close the browser
+driver.quit()
